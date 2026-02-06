@@ -69,3 +69,27 @@ if st.sidebar.checkbox("开启管理员模式"):
         supabase.table("bills").delete().neq("id", 0).execute()
         st.success("数据库已清空！")
         st.rerun()
+# ... (保留你上面的所有代码) ...
+
+# --- 5. 数据可视化 (新功能) ---
+st.header("📊 消费分析")
+
+if bills_data:
+    # 1. 整理数据：我们需要把相同名字的商品合并（比如买了3次咖啡，要算总和）
+    # 这里用到了一个 Python 高级技巧：字典推导式
+    # 如果看不懂没关系，先照抄，以后慢慢学
+    chart_data = {}
+    for bill in bills_data:
+        name = bill['item']
+        price = bill['price']
+        if name in chart_data:
+            chart_data[name] += price
+        else:
+            chart_data[name] = price
+            
+    # 2. 只有当有数据时才画图
+    if chart_data:
+        # bar_chart 是柱状图
+        st.bar_chart(chart_data)
+        
+        # 你的任务：试着把 .bar_chart 改成 .line_chart 看看会发生什么？
